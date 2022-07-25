@@ -236,10 +236,8 @@ public class SodiumGameOptionPages {
 
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(boolean.class, sodiumOpts)
-                        .setName("Use Chunk Multi-Draw")
-                        .setTooltip("Multi-draw allows multiple chunks to be rendered with fewer draw calls, greatly reducing CPU overhead when " +
-                                "rendering the world while also potentially allowing for more efficient GPU utilization. This optimization may cause " +
-                                "issues with some graphics drivers, so you should try disabling it if you are experiencing glitches.")
+                        .setName(new TranslatableText("sodium.options.use_chunk_multi-draw.name").getString())
+                        .setTooltip(new TranslatableText("sodium.options.use_chunk_multi-draw.tooltip").getString())
                         .setControl(TickBoxControl::new)
                         .setBinding((opts, value) -> opts.advanced.useChunkMultidraw = value, opts -> opts.advanced.useChunkMultidraw)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
@@ -247,10 +245,8 @@ public class SodiumGameOptionPages {
                         .setEnabled(MultidrawChunkRenderBackend.isSupported(sodiumOpts.getData().advanced.ignoreDriverBlacklist))
                         .build())
                 .add(OptionImpl.createBuilder(boolean.class, sodiumOpts)
-                        .setName("Use Vertex Array Objects")
-                        .setTooltip("Helps to improve performance by moving information about how vertex data should be rendered into " +
-                                "the driver, allowing it to better optimize for repeated rendering of the same objects. There is generally " +
-                                "no reason to disable this unless you're using incompatible mods.")
+                        .setName(new TranslatableText("sodium.options.use_vertex_array_objects.name").getString())
+                        .setTooltip(new TranslatableText("sodium.options.use_vertex_array_objects.tooltip").getString())
                         .setControl(TickBoxControl::new)
                         .setBinding((opts, value) -> opts.advanced.useVertexArrayObjects = value, opts -> opts.advanced.useVertexArrayObjects)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
@@ -269,10 +265,8 @@ public class SodiumGameOptionPages {
                         .build()
                 )
                 .add(OptionImpl.createBuilder(boolean.class, sodiumOpts)
-                        .setName("Use Compact Vertex Format")
-                        .setTooltip("If enabled, a more compact vertex format will be used for rendering chunks. This can reduce graphics memory usage and bandwidth " +
-                                "requirements significantly, especially for integrated graphics cards, but can cause z-fighting with some resource packs due " +
-                                "to how it reduces the precision of position and texture coordinate attributes.")
+                        .setName(new TranslatableText("sodium.options.use_compact_vertex_format.name").getString())
+                        .setTooltip(new TranslatableText("sodium.options.use_compact_vertex_format.tooltip").getString())
                         .setControl(TickBoxControl::new)
                         .setImpact(OptionImpact.MEDIUM)
                         .setBinding((opts, value) -> opts.advanced.useCompactVertexFormat = value, opts -> opts.advanced.useCompactVertexFormat)
@@ -328,10 +322,8 @@ public class SodiumGameOptionPages {
 
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(boolean.class, sodiumOpts)
-                        .setName("Ignore Driver Blacklist")
-                        .setTooltip("If enabled, known incompatibilities with your hardware/driver configuration will be ignored, allowing you to enable options that " +
-                                "may cause issues with your game. You should generally not touch this option unless you know exactly what you are doing. After changing " +
-                                "this option, you must save, close, and then re-open the settings screen.")
+                        .setName(new TranslatableText("sodium.options.ignore_driver_blacklist.name").getString())
+                        .setTooltip(new TranslatableText("sodium.options.ignore_driver_blacklist.tooltip").getString())
                         .setControl(TickBoxControl::new)
                         .setBinding((opts, value) -> opts.advanced.ignoreDriverBlacklist = value, opts -> opts.advanced.ignoreDriverBlacklist)
                         .build()
