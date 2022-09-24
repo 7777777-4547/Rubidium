@@ -1,14 +1,18 @@
 package me.jellysquid.mods.sodium.client.render.pipeline;
 
+import org.apache.commons.lang3.mutable.MutableFloat;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.jetbrains.annotations.Nullable;
+
 import me.jellysquid.mods.sodium.client.model.light.LightMode;
 import me.jellysquid.mods.sodium.client.model.light.LightPipeline;
 import me.jellysquid.mods.sodium.client.model.light.LightPipelineProvider;
 import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
 import me.jellysquid.mods.sodium.client.model.quad.ModelQuad;
-import me.jellysquid.mods.sodium.client.model.quad.blender.ColorSampler;
 import me.jellysquid.mods.sodium.client.model.quad.ModelQuadView;
 import me.jellysquid.mods.sodium.client.model.quad.ModelQuadViewMutable;
 import me.jellysquid.mods.sodium.client.model.quad.blender.ColorBlender;
+import me.jellysquid.mods.sodium.client.model.quad.blender.ColorSampler;
 import me.jellysquid.mods.sodium.client.model.quad.properties.ModelQuadFacing;
 import me.jellysquid.mods.sodium.client.model.quad.properties.ModelQuadFlags;
 import me.jellysquid.mods.sodium.client.model.quad.properties.ModelQuadWinding;
@@ -34,10 +38,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraftforge.client.ForgeHooksClient;
 
-import org.apache.commons.lang3.mutable.MutableFloat;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.Nullable;
-
 public class FluidRenderer {
     // TODO: allow this to be changed by vertex format
     // TODO: move fluid rendering to a separate render pass and control glPolygonOffset and glDepthFunc to fix this properly
@@ -55,7 +55,7 @@ public class FluidRenderer {
     private final ColorBlender colorBlender;
 
     // Cached wrapper type that adapts FluidRenderHandler to support QuadColorProvider<FluidState>
-    private final FabricFluidColorizerAdapter fabricColorProviderAdapter = new FabricFluidColorizerAdapter();
+    private final ForgeFluidColorizerAdapter forgeColorProviderAdapter = new ForgeFluidColorizerAdapter();
 
     private final QuadLightData quadLightData = new QuadLightData();
     private final int[] quadColors = new int[4];
@@ -263,7 +263,7 @@ public class FluidRenderer {
             rendered = true;
         }
 
-        this.quad.setFlags(ModelQuadFlags.IS_ALIGNED);
+        quad.setFlags(ModelQuadFlags.IS_ALIGNED);
 
         for (Direction dir : DirectionUtil.HORIZONTAL_DIRECTIONS) {
             float c1;
@@ -381,7 +381,7 @@ public class FluidRenderer {
     }
 
     private ColorSampler<FluidState> createColorProviderAdapter(BlockRenderView view, BlockPos pos, FluidState state) {
-        FabricFluidColorizerAdapter adapter = this.fabricColorProviderAdapter;
+        ForgeFluidColorizerAdapter adapter = this.forgeColorProviderAdapter;
         adapter.setHandler(view, pos, state);
 
         return adapter;
@@ -390,7 +390,7 @@ public class FluidRenderer {
     private void calculateQuadColors(ModelQuadView quad, BlockRenderView world, BlockPos pos, LightPipeline lighter, Direction dir, float brightness,
                                      ColorSampler<FluidState> colorSampler, FluidState fluidState) {
         QuadLightData light = this.quadLightData;
-        lighter.calculate(quad, pos, light, dir, false);
+        lighter.calculate(quad, pos, light, null, dir, false);
 
         int[] biomeColors = this.colorBlender.getColors(world, pos, quad, colorSampler, fluidState);
 
@@ -494,7 +494,7 @@ public class FluidRenderer {
         return -1.0f;
     }
 
-    private static class FabricFluidColorizerAdapter implements ColorSampler<FluidState> {
+    private static class ForgeFluidColorizerAdapter implements ColorSampler<FluidState> {
         private BlockRenderView world;
         private BlockPos pos;
         private FluidState state;
